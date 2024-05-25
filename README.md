@@ -89,4 +89,15 @@ ssh-keygen -t ed25519
 
 これをGitHubのリポジトリのデプロイキーに設定する
 
-メモ
+SETTING > GIT連携から連携する
+
+シークレットマネージャーに秘密鍵を登録し、サービスアカウトにIAMのSecret Managerの権限付与が必要
+
+公開鍵のKey-Valueの入力はknown_hostから取得する必要あり
+
+
+## Gitのブランチをdataformのワークスペースを同期する方法
+
+1. 手元でブランチ作ってPUSHする
+2. dataformで同じ名前のワークスペースを作成する
+3. dataform上でPULLができるようになっているのでする。
