@@ -1,8 +1,7 @@
-# dataform_sample
-test dataform
 
+以下作業記録
 
-## dataformプロジェクトの作成履歴
+## CLIでのdataformプロジェクトの作成履歴
 
 ### dockerに入る
 
@@ -101,3 +100,11 @@ SETTING > GIT連携から連携する
 1. 手元でブランチ作ってPUSHする
 2. dataformで同じ名前のワークスペースを作成する
 3. dataform上でPULLができるようになっているのでする。
+
+
+## workflow_settings.yamlはプロジェクトルートに必要
+
+workflow_settings.yamlファイルが、wortflow-projectディレクトリ以下に入っていたがこれではdataform上でワークフローの実行ができなかった（認識されなかった）ので
+workflow-projectディレクトリは削除して中のファイルをルートに移した。
+
+そしてdataform上でworkflow_settings.yamlを開いてパッケージのインストールを行うことで、実行（EXECUTION）できるようになった
