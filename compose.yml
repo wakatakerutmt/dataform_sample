@@ -1,0 +1,9 @@
+version: '3'
+services:
+  dataform:
+    build: 
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - .:/workdir # dockerfileにも記載しているがvolumeの方がoverrideされるので変更は即時反映される
+    tty: true

@@ -1,0 +1,54 @@
+config {
+    type: "table",
+    database: "iida-test-423114",
+    schema: "dataform_sample",
+    name: "customers"
+}
+
+WITH
+  customer_info AS (
+    SELECT
+      id as customer_id,
+      first_name,
+      last_name
+    FROM
+      ${ref("raw_customers")}
+  ),
+
+  orders AS (
+    SELECT
+      id as order_id,
+      user_id as customer_id,
+      order_date,
+      status
+    FROM
+      ${ref("raw_orders")}
+  ),
+
+  customer_orders AS (
+    SELECT
+      customer_id,
+      MIN(order_date) AS first_order_date,
+      MAX(order_date) AS latest_order_date,
+      COUNT(order_id) AS count_orders,
+    FROM
+      orders
+    GROUP BY
+      customer_id
+  ),
+
+  final AS (
+    SELECT
+      c.*,
+      o.first_order_date,
+      o.latest_order_date,
+      IFNULL(o.count_orders, 0) as count_orders
+    FROM
+      customer_info c
+    LEFT JOIN
+      customer_orders o
+    ON
+      c.customer_id = o.customer_id
+  )
+
+SELECT * FROM final

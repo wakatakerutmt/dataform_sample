@@ -1,0 +1,6 @@
+config {
+    type: "declaration",
+    database: "iida-test-423114",
+    schema: "dataform_sample",
+    name: "raw_orders"
+}
