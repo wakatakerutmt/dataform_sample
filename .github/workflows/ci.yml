@@ -5,6 +5,10 @@ on:
     branches-ignore:
       - main
       - develop
+    paths:
+      - 'definitions/**'
+      - 'includes/**'
+      - '.github/**'
 
 jobs:
   integration:
