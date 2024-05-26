@@ -2,7 +2,11 @@ config {
     type: "table",
     database: "iida-test-423114",
     schema: "dataform_sample",
-    name: "customers"
+    name: "customers",
+    assertions: {
+      nonNull: ["customer_id"],
+      uniqueKey: ["customer_id"]
+    }
 }
 
 WITH
