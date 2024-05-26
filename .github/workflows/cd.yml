@@ -3,6 +3,9 @@ name: CI
 on:
   pull_request:
     types: [closed]
+    paths:
+      - 'definitions/**'
+      - 'includes/**'
 
 jobs:
   post-merge-develop:
@@ -41,4 +44,4 @@ jobs:
       - name: production deploy
         uses: docker://dataformco/dataform:3.0.0-beta.1
         with:
-          args: run --schema-suffix dev
+          args: run --schema-suffix prod
