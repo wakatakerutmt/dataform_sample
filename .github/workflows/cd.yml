@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  post-merge-develop:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+      - name: Install project dependencies
+        uses: docker://dataformco/dataform:3.0.0-beta.1
+        with:
+          args: install
+      - name: Decrypt df credentials
+        run: gpg --quiet --batch --yes --decrypt --passphrase="$CREDENTIALS_GPG_PASSPHRASE" --output .df-credentials.json .df-credentials.json.gpg
+        env:
+          CREDENTIALS_GPG_PASSPHRASE: ${{ secrets.CREDENTIALS_GPG_PASSPHRASE }}
+      - name: development deploy
+        uses: docker://dataformco/dataform:3.0.0-beta.1
+        with:
+          args: run --schema-suffix dev
+
+  post-merge-main:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+      - name: Install project dependencies
+        uses: docker://dataformco/dataform:3.0.0-beta.1
+        with:
+          args: install
+      - name: Decrypt df credentials
+        run: gpg --quiet --batch --yes --decrypt --passphrase="$CREDENTIALS_GPG_PASSPHRASE" --output .df-credentials.json .df-credentials.json.gpg
+        env:
+          CREDENTIALS_GPG_PASSPHRASE: ${{ secrets.CREDENTIALS_GPG_PASSPHRASE }}
+      - name: production deploy
+        uses: docker://dataformco/dataform:3.0.0-beta.1
+        with:
+          args: run --schema-suffix dev

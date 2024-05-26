@@ -1,0 +1,7 @@
+
+{
+  "name": "repository-name",
+  "dependencies": {
+    "@dataform/core": "3.0.0-beta.6"
+  }
+}
