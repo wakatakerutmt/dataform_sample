@@ -24,10 +24,11 @@ jobs:
         uses: docker://dataformco/dataform:3.0.0-beta.1
         with:
           args: compile
-      - name: Test
-        uses: docker://dataformco/dataform:3.0.0-beta.1
-        with:
-          args: test
+      # テストがない時に実行するとエラー扱いになってえしまうので一旦スキップ
+      # - name: Test
+      #   uses: docker://dataformco/dataform:3.0.0-beta.1
+      #   with:
+      #     args: test
       - name: Dry run
         uses: docker://dataformco/dataform:3.0.0-beta.1
         with:
