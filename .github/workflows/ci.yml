@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - develop
+  pull_request:
+    types: [closed]
+
+jobs:
+  common-steps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v4
+      - name: Install project dependencies
+        uses: docker://dataformco/dataform:latest
+        with:
+          args: install --track=false
+      - name: Decrypt df credentials
+        run: gpg --quiet --batch --yes --decrypt --passphrase="$CREDENTIALS_GPG_PASSPHRASE" --output .df-credentials.json .df-credentials.json.gpg
+        env:
+          CREDENTIALS_GPG_PASSPHRASE: ${{ secrets.CREDENTIALS_GPG_PASSPHRASE }}
+
+  integration:
+    needs: common-steps
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use common steps
+        run: echo "Common steps have been executed."
+      - name: Compile
+        uses: docker://dataformco/dataform:latest
+        with:
+          args: compile --track=false
+      - name: Test
+        uses: docker://dataformco/dataform:latest
+        with:
+          args: test --track=false
+      - name: Dry run
+        uses: docker://dataformco/dataform:latest
+        with:
+          args: run --dry-run --track=false
+
+  post-merge-develop:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'develop'
+    needs: common-steps
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use common steps
+        run: echo "Common steps have been executed."
+      - name: Run post-merge tasks for develop
+        run: echo "Running post-merge tasks for develop branch"
+
+  post-merge-main:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    needs: common-steps
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use common steps
+        run: echo "Common steps have been executed."
+      - name: Run post-merge tasks for main
+        run: echo "Running post-merge tasks for main branch"
