@@ -108,3 +108,26 @@ workflow_settings.yamlファイルが、wortflow-projectディレクトリ以下
 workflow-projectディレクトリは削除して中のファイルをルートに移した。
 
 そしてdataform上でworkflow_settings.yamlを開いてパッケージのインストールを行うことで、実行（EXECUTION）できるようになった
+
+
+## CIの利用
+
+認証は.df-credentials.jsonの暗号化したものをコミットに含めて置き、それをCI上で復号して使う
+
+認証ファイルの暗号化は以下で行う（パスフレーズの設定が求められる）
+
+gpgが入ってない場合は入れる
+```
+brew install gpg
+```
+
+```
+gpg --symmetric --cipher-algo AES256 .df-credentials.json
+```
+
+パスフレーズはGitHubのsecretに登録して用いる
+
+復号は以下のコマンドで可能
+```
+gpg --quiet --batch --yes --decrypt --passphrase="$CREDENTIALS_GPG_PASSPHRASE" --output .df-credentials.json .df-credentials.json.gpg
+```
