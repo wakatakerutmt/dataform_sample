@@ -2,3 +2,4 @@ defaultProject: iida-test-423114
 defaultLocation: asia-northeast1
 defaultDataset: dataform_sample
 defaultAssertionDataset: dataform_assertions
+datasetSuffix: temp # dev, prodのときはここをオーバーライドして実行する（dataform run --schema-suffix ...）

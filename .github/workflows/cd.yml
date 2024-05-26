@@ -19,10 +19,10 @@ jobs:
         run: gpg --quiet --batch --yes --decrypt --passphrase="$CREDENTIALS_GPG_PASSPHRASE" --output .df-credentials.json .df-credentials.json.gpg
         env:
           CREDENTIALS_GPG_PASSPHRASE: ${{ secrets.CREDENTIALS_GPG_PASSPHRASE }}
-      - name: Use common steps
-        run: echo "Common steps have been executed."
-      - name: Run post-merge tasks for develop
-        run: echo "Running post-merge tasks for develop branch"
+      - name: development deploy
+        uses: docker://dataformco/dataform:3.0.0-beta.1
+        with:
+          args: run --schema-suffix dev
 
   post-merge-main:
     if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
@@ -38,7 +38,7 @@ jobs:
         run: gpg --quiet --batch --yes --decrypt --passphrase="$CREDENTIALS_GPG_PASSPHRASE" --output .df-credentials.json .df-credentials.json.gpg
         env:
           CREDENTIALS_GPG_PASSPHRASE: ${{ secrets.CREDENTIALS_GPG_PASSPHRASE }}
-      - name: Use common steps
-        run: echo "Common steps have been executed."
-      - name: Run post-merge tasks for main
-        run: echo "Running post-merge tasks for main branch"
+      - name: production deploy
+        uses: docker://dataformco/dataform:3.0.0-beta.1
+        with:
+          args: run --schema-suffix dev
